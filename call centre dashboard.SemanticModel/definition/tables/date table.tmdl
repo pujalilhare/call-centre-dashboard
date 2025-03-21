@@ -1,0 +1,36 @@
+table 'date table'
+	lineageTag: 40884522-5953-4c9c-a6bf-d586fe399162
+
+	column Date
+		formatString: General Date
+		lineageTag: 608195e0-11c2-474b-8533-73c8a22172ab
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: b80c3cbc-fa60-4a62-9361-640d043f22db
+			defaultHierarchy: LocalDateTable_710271c1-7612-4c36-8f4a-46fabc059c9a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column day = FORMAT('date table'[Date].[Date],"ddd")
+		lineageTag: 4d5f8bb8-6509-4bf2-8fd8-c3706a4d0cfc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day number' = WEEKDAY('date table'[Date],1)
+		formatString: 0
+		lineageTag: 2ce133b1-3a32-47d8-b80b-6d7a8b83b827
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'date table' = calculated
+		mode: import
+		source = CALENDAR(MIN('Call Center_Call Center'[Call Timestamp]),MAX('Call Center_Call Center'[Call Timestamp]))
+
+	annotation PBI_Id = 5b5d02452f924a418182effbe2e67a2a
+

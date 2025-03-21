@@ -1,0 +1,132 @@
+table 'Call Center_Call Center'
+	lineageTag: 4ff53f2c-fd2f-4562-b769-fd4ac6bdf774
+
+	measure 'Total Calls' = COUNT('Call Center_Call Center'[Id])
+		formatString: 0.0
+		lineageTag: e559f8d7-201e-49d8-8010-2a20cf8be942
+
+	measure 'Total Call Duration (hrs)' = SUM('Call Center_Call Center'[Call Duration In Minutes])/60
+		formatString: 0
+		lineageTag: 6e65bb3a-0c18-40b6-afe9-7d66a7e75e50
+
+	measure 'Average calls in minutes' = AVERAGE('Call Center_Call Center'[Call Duration In Minutes])
+		lineageTag: da9a8233-5342-4b7b-8adf-61b26286fcf1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'response time percentage' = CALCULATE([Total Calls],'Call Center_Call Center'[Response Time]="within SLA" || 'Call Center_Call Center'[Response Time]="above SLA")/[Total Calls]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 901e64b1-dab7-4b63-9565-e4a806bfcb8b
+
+	column Id
+		dataType: string
+		lineageTag: 1c64164b-68ca-4c0a-ac2c-a63a80b329ad
+		summarizeBy: none
+		sourceColumn: Id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Call Timestamp'
+		dataType: string
+		lineageTag: 7cab0dae-5330-4bef-a259-e43b8632b756
+		summarizeBy: none
+		sourceColumn: Call Timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Call-Centres City'
+		dataType: string
+		lineageTag: 95fb9383-36e7-425c-8d8c-28a005d00232
+		summarizeBy: none
+		sourceColumn: Call-Centres City
+
+		annotation SummarizationSetBy = Automatic
+
+	column Channel
+		dataType: string
+		lineageTag: 3108ed4f-8337-4328-8ca7-e5315d5d7fcd
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 53d8a16d-aba5-41d7-b3cc-8e40179bcb8a
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Customer Name'
+		dataType: string
+		lineageTag: dfb803e2-3bd5-46f3-a1a4-0eaa250f1b84
+		summarizeBy: none
+		sourceColumn: Customer Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Reason
+		dataType: string
+		lineageTag: 2a0f88f6-aedd-4243-b240-3f7891234ad1
+		summarizeBy: none
+		sourceColumn: Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Response Time'
+		dataType: string
+		lineageTag: a4dabaca-f28b-47f8-aab4-b8282d514281
+		summarizeBy: none
+		sourceColumn: Response Time
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sentiment
+		dataType: string
+		lineageTag: e3d46964-6576-433a-a517-34feb9e978e2
+		summarizeBy: none
+		sourceColumn: Sentiment
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 88e94ff5-5a68-43ff-83bb-a8d39bd674e4
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Call Duration In Minutes'
+		dataType: int64
+		formatString: 0.00
+		lineageTag: 52b59741-546c-4fed-bc15-47cc5aa15ddd
+		summarizeBy: sum
+		sourceColumn: Call Duration In Minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Csat Score'
+		dataType: int64
+		formatString: 0
+		lineageTag: 7cbadee0-c6ce-42a0-a968-d876569f3f15
+		summarizeBy: sum
+		sourceColumn: Csat Score
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Call Center_Call Center' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\puja\Downloads\Call Center_Call Center.csv"),[Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Id", type text}, {"Call Timestamp", type text}, {"Call-Centres City", type text}, {"Channel", type text}, {"City", type text}, {"Customer Name", type text}, {"Reason", type text}, {"Response Time", type text}, {"Sentiment", type text}, {"State", type text}, {"Call Duration In Minutes", Int64.Type}, {"Csat Score", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
