@@ -1,5 +1,8 @@
 # 📊 Call Centre Dashboard – Power BI  
 
+![image info](./images/call%20centre%20dashboard_page-0001.jpg)
+![image info](./images/call%20centre%20dashboard_page-0002.jpg)
+
 ## **Overview**  
 This Power BI dashboard provides a **comprehensive analysis of call centre operations**, helping businesses track **call volume, response times, service channels, and customer sentiment**.  
 
